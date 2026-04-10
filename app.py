@@ -31,6 +31,7 @@ from config import SEOUL_GU_CODES
 from datetime import datetime
 from pathlib import Path
 import os
+import re
 
 # 환경변수 로드 (Streamlit Cloud secrets 또는 .env)
 try:
@@ -565,7 +566,7 @@ with tab6:
                                     if vd.get('response', {}).get('status') == 'OK':
                                         feats = vd['response']['result']['featureCollection']['features']
                                         for feat in feats:
-                                            bn = int(feat['properties'].get('bonbun', 0) or 0)
+                                            bn = int(re.match(r'(\d+)', str(feat['properties'].get('bonbun', '0'))).group(1)) if re.match(r'(\d+)', str(feat['properties'].get('bonbun', '0'))) else 0
                                             if bn in bonbuns:
                                                 for poly in feat['geometry']['coordinates']:
                                                     for ring in poly:
