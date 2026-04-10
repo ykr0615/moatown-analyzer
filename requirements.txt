@@ -1,0 +1,10 @@
+streamlit
+pandas
+plotly
+requests
+python-dotenv
+anthropic
+folium
+streamlit-folium
+pycryptodome
+olefile
