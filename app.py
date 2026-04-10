@@ -32,7 +32,14 @@ from datetime import datetime
 from pathlib import Path
 import os
 
-# .env 로드
+# 환경변수 로드 (Streamlit Cloud secrets 또는 .env)
+try:
+    # Streamlit Cloud
+    for key in st.secrets:
+        os.environ[key] = st.secrets[key]
+except Exception:
+    pass
+
 env_path = Path(__file__).parent / ".env"
 if env_path.exists():
     with open(env_path) as f:
@@ -480,12 +487,7 @@ with tab6:
             # 전체 블록 테이블 (점수순)
             display_cols = ["구간", "검색주소", "블록점수", "등급", "노후도", "충족상태", "주거건물", "평균나이", "교회", "상업시설", "문제점"]
             available = [c for c in display_cols if c in blocks_df.columns]
-            st.dataframe(
-                blocks_df[available]
-                    .style.format({"노후도": "{:.1f}%", "평균나이": "{:.0f}년", "블록점수": "{:.1f}"})
-                    .background_gradient(subset=["블록점수"], cmap="RdYlGn"),
-                use_container_width=True, height=400,
-            )
+            st.dataframe(blocks_df[available], use_container_width=True, height=400)
 
             # 블록별 상세 + 지도 (구간 클릭하면 지도 팝업)
             st.divider()
@@ -690,9 +692,7 @@ with tab6:
                 display_cols = ["구", "동", "구간", "검색주소", "블록점수", "등급", "노후도", "충족상태", "주거건물", "평균나이", "교회", "상업시설", "문제점"]
                 available = [c for c in display_cols if c in display.columns]
                 st.dataframe(
-                    display[available]
-                        .style.format({"노후도": "{:.1f}%", "평균나이": "{:.0f}년", "블록점수": "{:.1f}"})
-                        .background_gradient(subset=["블록점수"], cmap="RdYlGn"),
+                    display[available],
                     use_container_width=True, height=600,
                 )
             else:
@@ -821,7 +821,7 @@ with tab6:
             available = [c for c in display_cols if c in blocks_df.columns]
             st.dataframe(
                 blocks_df.sort_values("블록점수", ascending=False)[available]
-                    .style.format({"노후도": "{:.1f}%", "블록점수": "{:.1f}"}),
+                    ,
                 use_container_width=True, height=500,
             )
 
